@@ -1,0 +1,30 @@
+class Solution:
+    def findAnagrams(self, s: str, p: str) -> List[int]:
+        #Initialize variables
+        result = []
+        len_s, len_p = len(s), len(p)
+        
+        # Early exit if p is longer than s
+        if len_p > len_s:
+            return result
+        
+        #  Create frequency counts for p and the initial window of s
+        p_count = [0] * 26  # Frequency count of characters in p
+        s_count = [0] * 26  # Frequency count of characters in the sliding window of s
+        
+        for i in range(len_p):
+            p_count[ord(p[i]) - ord('a')] += 1
+            s_count[ord(s[i]) - ord('a')] += 1
+        
+        # Start sliding the window over s
+        for i in range(len_s - len_p + 1):
+            if i > 0:
+                # Slide the window by removing one character and adding another
+                s_count[ord(s[i - 1]) - ord('a')] -= 1  # Remove the character leaving the window
+                s_count[ord(s[i + len_p - 1]) - ord('a')] += 1  # Add the character entering the window
+            
+            #  Compare frequency counts
+            if s_count == p_count:
+                result.append(i)  # If counts match, add the start index to result
+        
+        return result
